@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"math/rand"
 	"net/http"
@@ -123,12 +124,24 @@ func setJSONHeader(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 }
 
+func serveFrontend(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFiles("templates/index.html")
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Erro ao carregar página: %v", err), http.StatusInternalServerError)
+		return
+	}
+	tmpl.Execute(w, nil)
+}
+
 func main() {
 	http.HandleFunc("/trips", getTrips)
 	http.HandleFunc("/trips/search", getTripByDestino)
 	http.HandleFunc("/trips/create", createTrip)
 	http.HandleFunc("/trips/update", updateTrip)
 	http.HandleFunc("/trips/delete", deleteTrip)
+	http.HandleFunc("/", serveFrontend)
+
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	fmt.Println("rodando no postman...")
 	log.Fatal(http.ListenAndServe(":8080", nil))
