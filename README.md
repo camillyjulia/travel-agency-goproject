@@ -22,7 +22,7 @@ Este projeto simula o backend de um site de viagens, desenvolvido em Go. Foi cri
 2. Clone o repositório:
 
 ```bash
-git clone <URL do seu repositório>
+git clone git@github.com:camillyjulia/travel-agency-goproject.git
 ```
 
 3. Rode o projeto:
